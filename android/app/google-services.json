@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "341041160849",
+    "project_id": "hotelio-eade5",
+    "storage_bucket": "hotelio-eade5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341041160849:android:b2720d62e7ea24e1009530",
+        "android_client_info": {
+          "package_name": "com.drexapp.hotelio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEhCxWZtXc5s_l3AyngAAicoVAeGOZW-4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
