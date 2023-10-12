@@ -7,6 +7,7 @@ import 'package:hotelio/config/app_route.dart';
 import 'package:hotelio/config/session.dart';
 import 'package:hotelio/model/user.dart';
 import 'package:hotelio/page/home_page.dart';
+import 'package:hotelio/page/sign_in.dart';
 import 'package:hotelio/page/splash.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -30,28 +31,30 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          textTheme: GoogleFonts.poppinsTextTheme(),
-          scaffoldBackgroundColor: AppColor.backgroundScaffold,
-          primaryColor: AppColor.primary,
-          colorScheme: const ColorScheme.light(
-            primary: AppColor.primary,
-            secondary: AppColor.secondary,
-          )),
+        textTheme: GoogleFonts.poppinsTextTheme(),
+        scaffoldBackgroundColor: AppColor.backgroundScaffold,
+        primaryColor: AppColor.primary,
+        colorScheme: const ColorScheme.light(
+          primary: AppColor.primary,
+          secondary: AppColor.secondary,
+        ),
+      ),
       routes: {
         '/': (context) {
           return FutureBuilder(
-              future: Session.getUser(User()),
-              builder: (context, AsyncSnapshot<User> snapshot) {
-                if (snapshot.data == null || snapshot.data!.id == null) {
-                  return const SplashPage();
-                } else {
-                  return const HomePage();
-                }
-              });
+            future: Session.getUser(User()),
+            builder: (context, AsyncSnapshot<User> snapshot) {
+              if (snapshot.data == null || snapshot.data!.id == null) {
+                return const HomePage();
+              } else {
+                return const SplashPage();
+              }
+            },
+          );
         },
         AppRoute.splash: (context) => const SplashPage(),
         AppRoute.home: (context) => const HomePage(),
-        AppRoute.signin: (context) => const SplashPage(),
+        AppRoute.signin: (context) => SignIn(),
         AppRoute.detail: (context) => const SplashPage(),
         AppRoute.checkout: (context) => const SplashPage(),
         AppRoute.checkoutSuccess: (context) => const SplashPage(),
