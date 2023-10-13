@@ -1,84 +1,57 @@
 import 'package:flutter/material.dart';
-//import 'package:hotelio/config/app_asset.dart';
-//import 'package:hotelio/config/app_color.dart';
+import 'package:get/get.dart';
+import 'package:hotelio/config/app_asset.dart';
+import 'package:hotelio/config/app_color.dart';
+import 'package:hotelio/controller/C_home.dart';
+import 'package:hotelio/page/nearby_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+  final cHome = Get.put(CHome());
+  final List<Map> listNav = [
+    {'icon': AppAssets.iconNearby, 'label': 'Nearby'},
+    {'icon': AppAssets.iconHistory, 'label': 'History'},
+    {'icon': AppAssets.iconPayment, 'label': 'Payment'},
+    {'icon': AppAssets.iconReward, 'label': 'Reward'},
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        //   body: Stack(
-        //     fit: StackFit.expand,
-        //     children: [
-        //       Image.asset(
-        //         AppAssets.bgIntro,
-        //         fit: BoxFit.cover,
-        //       ),
-        //       Container(
-        //         decoration: const BoxDecoration(
-        //             gradient: LinearGradient(
-        //                 begin: Alignment.bottomCenter,
-        //                 end: Alignment.topCenter,
-        //                 colors: [Colors.black, Colors.transparent])),
-        //       ),
-        //       Padding(
-        //         padding: const EdgeInsets.fromLTRB(16, 0, 16, 40),
-        //         child: Column(
-        //           mainAxisAlignment: MainAxisAlignment.end,
-        //           crossAxisAlignment: CrossAxisAlignment.start,
-        //           children: [
-        //             Text(
-        //               "Your Great Life\nStart Here",
-        //               style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-        //                     color: Colors.white,
-        //                     fontWeight: FontWeight.w900,
-        //                   ),
-        //             ),
-        //             const SizedBox(
-        //               height: 8,
-        //             ),
-        //             Text(
-        //               "More then just a hotel",
-        //               style: Theme.of(context).textTheme.titleMedium!.copyWith(
-        //                   color: Colors.white, fontWeight: FontWeight.w300),
-        //             ),
-        //             const SizedBox(
-        //               height: 30,
-        //             ),
-        //             SizedBox(
-        //               height: 50,
-        //               child: Stack(
-        //                 children: [
-        //                   Material(
-        //                     color: AppColor.primary,
-        //                     borderRadius: BorderRadius.circular(20),
-        //                     child: InkWell(
-        //                       borderRadius: BorderRadius.circular(20),
-        //                       onTap: () => {},
-        //                       child: Container(
-        //                         width: double.infinity,
-        //                         padding: const EdgeInsets.symmetric(
-        //                             horizontal: 36, vertical: 12),
-        //                         child: const Text(
-        //                           "Get Started",
-        //                           textAlign: TextAlign.center,
-        //                           style: TextStyle(
-        //                             fontSize: 16,
-        //                             fontWeight: FontWeight.w900,
-        //                           ),
-        //                         ),
-        //                       ),
-        //                     ),
-        //                   )
-        //                 ],
-        //               ),
-        //             )
-        //           ],
-        //         ),
-        //       )
-        //     ],
-        //   ),
+    return Scaffold(
+      body: Obx(() {
+        if (cHome.indexPage == 1) {
+          return const Text("History");
+        }
+        return NearbyPage();
+      }),
+      bottomNavigationBar: Obx(() {
+        return Material(
+          elevation: 8,
+          child: Container(
+            color: Colors.white,
+            padding: const EdgeInsets.only(top: 8, bottom: 6),
+            child: BottomNavigationBar(
+                currentIndex: cHome.indexPage,
+                onTap: (value) => cHome.indexPage = value,
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                type: BottomNavigationBarType.fixed,
+                unselectedItemColor: Colors.grey,
+                selectedItemColor: Colors.black,
+                selectedIconTheme: const IconThemeData(
+                  color: AppColor.primary,
+                ),
+                selectedLabelStyle:
+                    const TextStyle(fontWeight: FontWeight.bold),
+                selectedFontSize: 12,
+                items: listNav.map((e) {
+                  return BottomNavigationBarItem(
+                      icon: ImageIcon(AssetImage(e['icon'])),
+                      label: e['label']);
+                }).toList()),
+          ),
         );
+      }),
+    );
   }
 }

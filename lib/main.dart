@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
             future: Session.getUser(User()),
             builder: (context, AsyncSnapshot<User> snapshot) {
               if (snapshot.data == null || snapshot.data!.id == null) {
-                return const HomePage();
+                return HomePage();
               } else {
                 return const SplashPage();
               }
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
           );
         },
         AppRoute.splash: (context) => const SplashPage(),
-        AppRoute.home: (context) => const HomePage(),
+        AppRoute.home: (context) => HomePage(),
         AppRoute.signin: (context) => SignIn(),
         AppRoute.detail: (context) => const SplashPage(),
         AppRoute.checkout: (context) => const SplashPage(),
