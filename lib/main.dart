@@ -6,6 +6,7 @@ import 'package:hotelio/config/app_color.dart';
 import 'package:hotelio/config/app_route.dart';
 import 'package:hotelio/config/session.dart';
 import 'package:hotelio/model/user.dart';
+import 'package:hotelio/page/detail_hotel.dart';
 import 'package:hotelio/page/home_page.dart';
 import 'package:hotelio/page/sign_in.dart';
 import 'package:hotelio/page/splash.dart';
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
         AppRoute.splash: (context) => const SplashPage(),
         AppRoute.home: (context) => HomePage(),
         AppRoute.signin: (context) => SignIn(),
-        AppRoute.detail: (context) => const SplashPage(),
+        AppRoute.detail: (context) => const DetailHotel(),
         AppRoute.checkout: (context) => const SplashPage(),
         AppRoute.checkoutSuccess: (context) => const SplashPage(),
         AppRoute.detailBooking: (context) => const SplashPage(),
