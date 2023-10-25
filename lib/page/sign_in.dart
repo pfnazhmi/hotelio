@@ -55,15 +55,21 @@ class SignIn extends StatelessWidget {
                       const SizedBox(
                         height: 80,
                       ),
-                      Text(
-                        "Sign In\nTo Your Account",
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Sign In\nTo Your Account",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 16,
                       ),
                       TextFormField(
                         controller: controllerEmail,
