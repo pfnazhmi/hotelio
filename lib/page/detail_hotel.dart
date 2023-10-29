@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hotelio/config/app_asset.dart';
 import 'package:hotelio/config/app_color.dart';
+import 'package:hotelio/config/app_format.dart';
+import 'package:hotelio/config/app_route.dart';
+import 'package:hotelio/model/booking.dart';
 import 'package:hotelio/model/hotel.dart';
+import 'package:hotelio/page/checkout_page.dart';
+import 'package:hotelio/widget/button_custom.dart';
 
 class DetailHotel extends StatelessWidget {
   DetailHotel({super.key});
+
+  final Rx<Booking> _bookedData = initBooking.obs;
+  Booking get bookedData => _bookedData.value;
+  set bookedData(Booking n) => _bookedData.value = n;
 
   final List facilities = [
     {
@@ -42,6 +52,48 @@ class DetailHotel extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              top: BorderSide(color: Colors.grey[100]!, width: 1.5),
+            )),
+        height: 80,
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      AppFormat.currency(hotel.price.toDouble()),
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          color: AppColor.secondary,
+                          fontWeight: FontWeight.w900),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      "/Night",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            ButtonCustom(
+              label: "Booking Now",
+              onTap: () {
+                Navigator.pushReplacementNamed(context, AppRoute.checkout);
+              },
+            ),
+          ],
+        ),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -90,14 +142,51 @@ class DetailHotel extends StatelessWidget {
             const SizedBox(
               height: 6,
             ),
-            SizedBox(
-              height: 105,
-              child: ListView.builder(
-                itemBuilder: (context, index) {},
-              ),
-            )
+            activities(hotel),
+            const SizedBox(
+              height: 20,
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  SizedBox activities(Hotel hotel) {
+    return SizedBox(
+      height: 105,
+      child: ListView.builder(
+        itemCount: hotel.activities.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          Map activity = hotel.activities[index];
+          return Padding(
+            padding: EdgeInsets.fromLTRB(
+              index == 0 ? 16 : 8,
+              0,
+              index == hotel.activities.length - 1 ? 16 : 8,
+              0,
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      activity['image'],
+                      width: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 6,
+                ),
+                Text(activity['name'])
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -125,7 +214,7 @@ class DetailHotel extends StatelessWidget {
             ),
             Text(
               facilities[index]['label'],
-              style: TextStyle(fontSize: 13),
+              style: const TextStyle(fontSize: 13),
             )
           ]),
         );
