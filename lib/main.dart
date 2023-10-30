@@ -58,9 +58,9 @@ class MyApp extends StatelessWidget {
         AppRoute.home: (context) => HomePage(),
         AppRoute.signin: (context) => SignIn(),
         AppRoute.detail: (context) => DetailHotel(),
-        AppRoute.checkout: (context) => const CheckoutPage(),
-        AppRoute.checkoutSuccess: (context) => const SplashPage(),
-        AppRoute.detailBooking: (context) => const SplashPage(),
+        AppRoute.checkout: (context) => CheckoutPage(),
+        AppRoute.checkoutSuccess: (context) => SplashPage(),
+        AppRoute.detailBooking: (context) => SplashPage(),
       },
     );
   }

@@ -45,7 +45,7 @@ class NearbyPage extends StatelessWidget {
               .cast<Hotel>() // Meletakkan cast di sini
               .toList();
 
-      if (list.isEmpty) return const Center(child: Text("Empty"));
+      if (list.isEmpty) return const Center(child: Text("Empty..."));
       return ListView.builder(
         itemCount: list.length,
         shrinkWrap: true,
@@ -177,7 +177,7 @@ class NearbyPage extends StatelessWidget {
                   },
                   child: Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Text(
                       category,
                       style: Theme.of(context)
