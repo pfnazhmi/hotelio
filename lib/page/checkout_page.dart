@@ -5,9 +5,13 @@ import 'package:get/get_instance/get_instance.dart';
 import 'package:hotelio/config/app_asset.dart';
 import 'package:hotelio/config/app_color.dart';
 import 'package:hotelio/config/app_format.dart';
+import 'package:hotelio/config/app_route.dart';
 import 'package:hotelio/controller/C_user.dart';
+import 'package:hotelio/model/booking.dart';
 import 'package:hotelio/model/hotel.dart';
+import 'package:hotelio/source/booking_source.dart';
 import 'package:hotelio/widget/button_custom.dart';
+import 'package:intl/intl.dart';
 
 class CheckoutPage extends StatelessWidget {
   CheckoutPage({super.key});
@@ -21,7 +25,16 @@ class CheckoutPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black,
+        //foregroundColor: Colors.black,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.pop(context, AppRoute.detail);
+          },
+        ),
         centerTitle: true,
         title: const Text(
           "Checkout",
@@ -49,7 +62,29 @@ class CheckoutPage extends StatelessWidget {
           ),
           ButtonCustom(
             label: "Proceed to Payment",
-            onTap: () {},
+            onTap: () {
+              BookingSource.addBooking(
+                cUser.data.id!,
+                Booking(
+                    id: "",
+                    idHotel: hotel.id,
+                    cover: hotel.cover,
+                    name: hotel.name,
+                    location: hotel.location,
+                    date: DateFormat("yyyy-mm-dd").format(DateTime.now()),
+                    guest: 1,
+                    breakfast: "Include",
+                    checkInTime: "08.00 WIB",
+                    night: 2,
+                    serviceFee: 6,
+                    activities: 40,
+                    totalPayment: hotel.price + 2 + 6 + 40,
+                    status: "PAID",
+                    isDone: false),
+              );
+              Navigator.pushNamed(context, AppRoute.checkoutSuccess,
+                  arguments: hotel);
+            },
             isExpand: true,
           )
         ],
@@ -61,7 +96,7 @@ class CheckoutPage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(16)),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
           "Payment Method",
@@ -108,7 +143,7 @@ class CheckoutPage extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.check_circle,
                 color: AppColor.secondary,
               )
@@ -123,7 +158,7 @@ class CheckoutPage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(16)),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
