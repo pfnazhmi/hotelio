@@ -23,7 +23,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   void initState() {
-    cHistoy.getlistBooking(cUser.data.id!);
+    cHistoy.getListBooking(cUser.data.id!);
     super.initState();
   }
 
@@ -38,49 +38,48 @@ class _HistoryPageState extends State<HistoryPage> {
         const SizedBox(
           height: 24,
         ),
-        Text("TES BOS")
-
-        // GetBuilder<CHistory>(builder: (_) {
-        //   return GroupedListView<Booking, String>(
-        //     padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        //     physics: const NeverScrollableScrollPhysics(),
-        //     shrinkWrap: true,
-        //     elements: _.listBooking,
-        //     groupBy: (element) => element.date,
-        //     groupSeparatorBuilder: (String groupByValue) {
-        //       String date = DateFormat('yyyy-MM-dd').format(DateTime.now()) ==
-        //               groupByValue
-        //           ? 'Today New'
-        //           : AppFormat.dateMonth(groupByValue);
-        //       return Padding(
-        //         padding: const EdgeInsets.only(top: 10, bottom: 10),
-        //         child: Text(
-        //           date,
-        //           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-        //                 fontWeight: FontWeight.bold,
-        //               ),
-        //         ),
-        //       );
-        //     },
-        //     itemBuilder: (context, element) {
-        //       return Padding(
-        //         padding: const EdgeInsets.only(bottom: 16),
-        //         child: GestureDetector(
-        //           onTap: () {
-        //             Navigator.pushNamed(
-        //               context,
-        //               AppRoute.detailBooking,
-        //               arguments: element,
-        //             );
-        //           },
-        //           child: item(context, element),
-        //         ),
-        //       );
-        //     },
-        //     itemComparator: (item1, item2) => item1.date.compareTo(item2.date),
-        //     order: GroupedListOrder.DESC,
-        //   );
-        // }),
+        GetBuilder<CHistory>(builder: (_) {
+          return GroupedListView<Booking, String>(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            elements: _.listBooking,
+            groupBy: (element) => element.date,
+            groupSeparatorBuilder: (String groupByValue) {
+              String date = DateFormat('yyyy-MM-dd').format(DateTime.now()) ==
+                      groupByValue
+                  ? "Today New"
+                  : AppFormat.dateMonth(groupByValue);
+              return Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                child: Text(
+                  date,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+              );
+            },
+            itemBuilder: (context, element) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      AppRoute.detailBooking,
+                      arguments: element,
+                    );
+                  },
+                  child: item(context, element),
+                ),
+              );
+            },
+            itemComparator: (item1, item2) => item1.date.compareTo(item2.date),
+            order: GroupedListOrder.DESC,
+          );
+        })
       ],
     );
   }
