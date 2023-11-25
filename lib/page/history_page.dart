@@ -8,7 +8,6 @@ import 'package:hotelio/config/app_route.dart';
 import 'package:hotelio/controller/C_history.dart';
 import 'package:hotelio/controller/C_user.dart';
 import 'package:hotelio/model/booking.dart';
-import 'package:intl/intl.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -18,12 +17,12 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  final cHistoy = Get.put(CHistory());
+  final cHistory = Get.put(CHistory());
   final cUser = Get.put(CUser());
 
   @override
   void initState() {
-    cHistoy.getListBooking(cUser.data.id!);
+    cHistory.getListBooking(cUser.data.id!);
     super.initState();
   }
 
@@ -38,48 +37,52 @@ class _HistoryPageState extends State<HistoryPage> {
         const SizedBox(
           height: 24,
         ),
-        GetBuilder<CHistory>(builder: (_) {
-          return GroupedListView<Booking, String>(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            elements: _.listBooking,
-            groupBy: (element) => element.date,
-            groupSeparatorBuilder: (String groupByValue) {
-              String date = DateFormat('yyyy-MM-dd').format(DateTime.now()) ==
-                      groupByValue
-                  ? "Today New"
-                  : AppFormat.dateMonth(groupByValue);
-              return Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 10),
-                child: Text(
-                  date,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-              );
-            },
-            itemBuilder: (context, element) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      AppRoute.detailBooking,
-                      arguments: element,
-                    );
-                  },
-                  child: item(context, element),
-                ),
-              );
-            },
-            itemComparator: (item1, item2) => item1.date.compareTo(item2.date),
-            order: GroupedListOrder.DESC,
-          );
-        })
+        GetBuilder<CHistory>(
+          builder: (_) {
+            return GroupedListView<Booking, String>(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              elements: _.listBooking,
+              groupBy: (element) => element.date,
+              groupSeparatorBuilder: (String groupByValue) {
+                DateTime groupDate = DateTime.parse(groupByValue);
+                String date = groupDate.isAtSameMomentAs(DateTime.now())
+                    ? "Today New"
+                    : AppFormat.dateMonth(groupByValue);
+
+                return Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                  child: Text(
+                    date,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                );
+              },
+              itemBuilder: (context, element) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoute.detailBooking,
+                        arguments: element,
+                      );
+                    },
+                    child: item(context, element),
+                  ),
+                );
+              },
+              itemComparator: (item1, item2) =>
+                  item1.date.compareTo(item2.date),
+              order: GroupedListOrder.ASC,
+            );
+          },
+        ),
       ],
     );
   }
@@ -163,10 +166,12 @@ class _HistoryPageState extends State<HistoryPage> {
                     .titleLarge!
                     .copyWith(fontWeight: FontWeight.w900),
               ),
-              const Text(
-                '100 transactions',
-                style: TextStyle(color: Colors.grey, fontSize: 12),
-              )
+              Obx(() {
+                return Text(
+                  '${cHistory.listBooking.length} Transactions',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                );
+              })
             ],
           )
         ],

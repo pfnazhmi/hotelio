@@ -7,13 +7,11 @@ import 'package:hotelio/config/app_route.dart';
 import 'package:hotelio/controller/C_user.dart';
 import 'package:hotelio/model/booking.dart';
 import 'package:hotelio/model/hotel.dart';
-import 'package:hotelio/page/checkout_page.dart';
 import 'package:hotelio/source/booking_source.dart';
 import 'package:hotelio/widget/button_custom.dart';
 
 class DetailHotel extends StatelessWidget {
-  DetailHotel({super.key});
-
+  DetailHotel({Key? key}) : super(key: key);
   final cUser = Get.put(CUser());
 
   final Rx<Booking> _bookedData = initBooking.obs;
@@ -36,106 +34,98 @@ class DetailHotel extends StatelessWidget {
     {
       'icon': AppAssets.iconStore,
       'label': 'Store',
-    }
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
-    Hotel hotel = ModalRoute.of(context)?.settings.arguments as Hotel;
+    Hotel hotel = ModalRoute.of(context)!.settings.arguments as Hotel;
     BookingSource.checkIsBooked(cUser.data.id!, hotel.id).then((bookingValue) {
       bookedData = bookingValue ?? initBooking;
     });
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
         title: const Text(
-          "Hotel Details",
+          'Hotel Details',
           style: TextStyle(
             fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF111111),
+            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
       ),
-      //bottomNavigationBar: bookingNow(hotel, context),
+      // bottomNavigationBar: bookingNow(hotel, context),
       bottomNavigationBar: Obx(() {
         if (bookedData.id == '') return bookingNow(hotel, context);
-        return viewReceipt();
+        return viewReceipt(context);
       }),
       body: Container(
         decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24), topRight: Radius.circular(24))),
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
         child: ListView(
           children: [
-            const SizedBox(
-              height: 24,
-            ),
+            const SizedBox(height: 24),
             images(hotel),
-            const SizedBox(
-              height: 16,
-            ),
+            const SizedBox(height: 16),
             name(hotel, context),
-            const SizedBox(
-              height: 16,
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(hotel.description),
             ),
-            description(hotel),
-            const SizedBox(
-              height: 16,
-            ),
+            const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                "Facilities",
+                'Facilities',
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
             ),
             gridFacilities(),
-            const SizedBox(
-              height: 16,
-            ),
+            const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                "Activities",
+                'Activities',
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
             ),
-            const SizedBox(
-              height: 6,
-            ),
+            const SizedBox(height: 16),
             activities(hotel),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 
-  Container viewReceipt() {
+  Container viewReceipt(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.white,
-          border:
-              Border(top: BorderSide(color: Colors.grey[100]!, width: 1.5))),
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(color: Colors.grey[100]!, width: 1.5),
+        ),
+      ),
       height: 80,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            "You booked this.",
+            'You booked  this.',
             style: TextStyle(color: Colors.grey),
           ),
           Material(
@@ -143,20 +133,30 @@ class DetailHotel extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             child: InkWell(
               borderRadius: BorderRadius.circular(20),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoute.detailBooking,
+                  arguments: bookedData,
+                );
+              },
               child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 36, vertical: 14),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 36,
+                  vertical: 14,
+                ),
                 child: Text(
-                  "View Receipt",
+                  'View Receipt',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -165,10 +165,11 @@ class DetailHotel extends StatelessWidget {
   Container bookingNow(Hotel hotel, BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(color: Colors.grey[100]!, width: 1.5),
-          )),
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(color: Colors.grey[100]!, width: 1.5),
+        ),
+      ),
       height: 80,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
@@ -177,29 +178,24 @@ class DetailHotel extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    AppFormat.currency(hotel.price.toDouble()),
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: AppColor.secondary, fontWeight: FontWeight.w900),
-                  ),
+                Text(
+                  AppFormat.currency(hotel.price.toDouble()),
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: AppColor.secondary,
+                        fontWeight: FontWeight.w900,
+                      ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    "/Night",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                )
+                const Text(
+                  'per night',
+                  style: TextStyle(color: Colors.grey),
+                ),
               ],
             ),
           ),
           ButtonCustom(
-            label: "Booking Now",
+            label: 'Booking Now',
             onTap: () {
-              Navigator.pushReplacementNamed(context, AppRoute.checkout,
-                  arguments: hotel);
+              Navigator.pushNamed(context, AppRoute.checkout, arguments: hotel);
             },
           ),
         ],
@@ -234,10 +230,8 @@ class DetailHotel extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 6,
-                ),
-                Text(activity['name'])
+                const SizedBox(height: 6),
+                Text(activity['name']),
               ],
             ),
           );
@@ -260,27 +254,22 @@ class DetailHotel extends StatelessWidget {
       itemBuilder: (context, index) {
         return Container(
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[200]!),
-              borderRadius: BorderRadius.circular(24)),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            ImageIcon(AssetImage(facilities[index]['icon'])),
-            const SizedBox(
-              height: 4,
-            ),
-            Text(
-              facilities[index]['label'],
-              style: const TextStyle(fontSize: 13),
-            )
-          ]),
+            border: Border.all(color: Colors.grey[200]!),
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ImageIcon(AssetImage(facilities[index]['icon'])),
+              const SizedBox(height: 4),
+              Text(
+                facilities[index]['label'],
+                style: const TextStyle(fontSize: 13),
+              ),
+            ],
+          ),
         );
       },
-    );
-  }
-
-  Padding description(Hotel hotel) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Text(hotel.description),
     );
   }
 
@@ -295,30 +284,28 @@ class DetailHotel extends StatelessWidget {
               children: [
                 Text(
                   hotel.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 Text(
                   hotel.location,
                   style: const TextStyle(
-                      color: Colors.grey, fontWeight: FontWeight.w300),
-                )
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
               ],
             ),
           ),
-          const Icon(
-            Icons.star,
-            color: AppColor.starActive,
-          ),
-          const SizedBox(
-            width: 4,
-          ),
+          const Icon(Icons.star, color: AppColor.starActive),
+          const SizedBox(width: 4),
           Text(
             hotel.rate.toString(),
             style: const TextStyle(
               fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
@@ -330,23 +317,28 @@ class DetailHotel extends StatelessWidget {
     return SizedBox(
       height: 180,
       child: ListView.builder(
-          itemCount: hotel.images.length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: ((context, index) {
-            return Padding(
-              padding: EdgeInsets.fromLTRB(index == 0 ? 16 : 8, 0,
-                  index == hotel.images.length - 1 ? 16 : 8, 0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  hotel.images[index],
-                  fit: BoxFit.cover,
-                  height: 180,
-                  width: 240,
-                ),
+        itemCount: hotel.images.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.fromLTRB(
+              index == 0 ? 16 : 8,
+              0,
+              index == hotel.images.length - 1 ? 16 : 8,
+              0,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(
+                hotel.images[index],
+                fit: BoxFit.cover,
+                height: 180,
+                width: 240,
               ),
-            );
-          })),
+            ),
+          );
+        },
+      ),
     );
   }
 }
